@@ -17,6 +17,7 @@
     "modbus-serial": "^8.0.21-no-serial-port",
     "mongoose": "^8.16.1",
     "node-opcua": "^2.156.0",
+    "openai": "^5.8.2",
     "serialport": "^13.0.0"
   },
   "devDependencies": {
@@ -24,6 +25,7 @@
     "@types/node": "^24.0.10",
     "@types/serialport": "^8.0.5",
     "ts-node": "^10.9.2",
+    "tsx": "^4.20.3",
     "typescript": "^5.8.3"
   }
 }

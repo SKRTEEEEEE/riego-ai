@@ -1,4 +1,4 @@
-type Cultivo = "tomates" | "lechugas";
+export type Cultivo = "tomates" | "lechugas";
 
 interface Rango {
   humedad: [number, number];
