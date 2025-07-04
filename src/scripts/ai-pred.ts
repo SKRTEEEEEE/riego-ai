@@ -1,4 +1,3 @@
-import { obtenerDatosUltimoMes } from "../app/db";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import { calcularMediasHistoricas } from "../app/server-fake";

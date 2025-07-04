@@ -1,0 +1,59 @@
+{
+  "compilerOptions": {
+    // Configuración de salida
+    "target": "ES2020",                          // Versión de JavaScript objetivo
+    "module": "ESNext",                          // Sistema de módulos
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],    // Librerías incluidas
+    "outDir": "./dist",                          // Directorio de salida
+    "rootDir": "./src",                          // Directorio raíz de código fuente
+    
+    // Resolución de módulos
+    "moduleResolution": "node",                  // Resolución estilo Node.js
+    "baseUrl": "./",                             // URL base para imports
+    "paths": {                                   // Alias de rutas
+      "@/*": ["src/*"],
+      "@components/*": ["src/components/*"],
+      "@utils/*": ["src/utils/*"]
+    },
+    
+    // Generación de archivos
+    "declaration": true,                         // Generar archivos .d.ts
+    "declarationMap": true,                      // Generar mapas para .d.ts
+    "sourceMap": true,                           // Generar source maps
+    "removeComments": false,                     // Mantener comentarios
+    
+    // Verificación de tipos
+    "strict": true,                              // Modo estricto (recomendado)
+    "noImplicitAny": true,                       // No permitir 'any' implícito
+    "strictNullChecks": true,                    // Verificación estricta de null
+    "strictFunctionTypes": true,                 // Verificación estricta de funciones
+    "noImplicitReturns": true,                   // Todas las rutas deben retornar
+    "noUnusedLocals": true,                      // No variables locales sin usar
+    "noUnusedParameters": true,                  // No parámetros sin usar
+    
+    // Compatibilidad
+    "esModuleInterop": true,                     // Interoperabilidad con CommonJS
+    "allowSyntheticDefaultImports": true,        // Imports por defecto sintéticos
+    "forceConsistentCasingInFileNames": true,    // Nombres de archivo consistentes
+    "skipLibCheck": true,                        // Saltar verificación de librerías
+    
+    // Características experimentales
+    "experimentalDecorators": true,              // Soporte para decoradores
+    "emitDecoratorMetadata": true,               // Metadata de decoradores
+    
+    // Opciones adicionales
+    "pretty": true,                              // Salida formateada
+    "incremental": true,                         // Compilación incremental
+    "tsBuildInfoFile": "./dist/.tsbuildinfo"     // Archivo de info de build
+  },
+  "include": [
+    "src/**/*",                                  // Incluir todo en src
+    "types/**/*"                                 // Incluir tipos personalizados
+  ],
+  "exclude": [
+    "node_modules",                              // Excluir dependencias
+    "dist",                                      // Excluir directorio de salida
+    "**/*.test.ts",                              // Excluir archivos de test
+    "**/*.spec.ts"                               // Excluir archivos de spec
+  ]
+}

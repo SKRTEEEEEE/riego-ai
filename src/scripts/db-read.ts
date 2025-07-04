@@ -3,6 +3,8 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import { calcularMediasHistoricas } from "../app/server-fake";
 dotenv.config()
+console.log("🌍 Conectando a MongoDB...")
+console.log("MONGODB_URI:", process.env.MONGODB_URI);
 mongoose.connect(process.env.MONGODB_URI!).then(() => {
   console.log("✅ Conexión exitosa a MongoDB");
 }).catch((error) => {

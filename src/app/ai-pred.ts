@@ -1,8 +1,21 @@
-import axios from 'axios';
 import { MediaHistorica } from './server-fake';
 import { Cultivo } from './mc-fake';
+import { AzureOpenAI } from 'openai';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+ const endpoint = process.env["AZURE_OPENAI_ENDPOINT"] || "https://airiego.openai.azure.com/";
+const apiKey = process.env["AZURE_OPENAI_API_KEY"] || "<REPLACE_WITH_YOUR_KEY_VALUE_HERE>";
+const apiVersion = "2025-01-01-preview";
+const deployment = "gpt-4.1-nano";
+
+const client = new AzureOpenAI({ endpoint, apiKey, apiVersion, deployment });
 
 export const obtenerRecomendacionRiego = async (cultivo: Cultivo, datosHistoricos: MediaHistorica, clima: string) => {
+  console.log("🚀 Iniciando la obtención de recomendación de riego...");
+  console.log("endpoint:", endpoint);
+  console.log("apiKey:", apiKey);
   const prompt = `
   Dados los siguientes datos históricos: 
   
@@ -82,19 +95,21 @@ export const obtenerRecomendacionRiego = async (cultivo: Cultivo, datosHistorico
   `;
 
   try {
-    const endpoint = `${process.env.AZURE_OPENAI_ENDPOINT}/openai/deployments/${process.env.AZURE_DEPLOYMENT_NAME}/chat/completions`;
-    const response = await axios.post(endpoint, {
-      model: 'GPT-4.1-nano-2025-04-14',
-      messages: [{ role: 'user', content: prompt }],
-      max_tokens: 100
-    }, {
-      headers: {
-        'Authorization': `Bearer ${process.env.AZURE_OPENAI_API_KEY}`,
-        'Content-Type': 'application/json'
-      }
+    const result = await client.chat.completions.create({
+      model: deployment,
+      messages: [{ role: "user", content: prompt }],
+      // messages: [
+      //   { role: "system", content: SYSTEM_CONTEXT },
+      //   { role: "user", content: prompt }
+      // ],
+      max_tokens: 1200,
+      temperature: 0.3,
+      top_p: 1,
+      frequency_penalty: 0,
+      presence_penalty: 0
     });
 
-    return response.data.choices[0].message.content;
+    return result.choices[0].message.content;
   } catch (error) {
     console.error('Error al comunicarse con la API de Azure OpenAI', error);
     throw new Error('No se pudo obtener la recomendación de riego');
