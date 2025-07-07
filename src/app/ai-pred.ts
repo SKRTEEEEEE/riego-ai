@@ -1,112 +1,66 @@
-import { MediaHistorica } from './server-fake';
+import { MediaHistorica } from './media-fake';
 import { Cultivo } from './mc-fake';
 import { AzureOpenAI } from 'openai';
 import dotenv from 'dotenv';
+import { SYSTEM_CONTEXT } from './ai-const';
 
 dotenv.config();
 
  const endpoint = process.env["AZURE_OPENAI_ENDPOINT"] || "https://airiego.openai.azure.com/";
 const apiKey = process.env["AZURE_OPENAI_API_KEY"] || "<REPLACE_WITH_YOUR_KEY_VALUE_HERE>";
-const apiVersion = "2025-01-01-preview";
-const deployment = "gpt-4.1-nano";
+// const apiVersion = "2025-01-01-preview";
+// const deployment = "gpt-4.1-nano";
+// const apiVersion = "2025-01-01-preview";
+//   const deployment = "o3-mini";
+  const apiVersion = "2025-01-01-preview";
+  const deployment = "gpt-4.1";
 
 const client = new AzureOpenAI({ endpoint, apiKey, apiVersion, deployment });
 
 export const obtenerRecomendacionRiego = async (cultivo: Cultivo, datosHistoricos: MediaHistorica, clima: string) => {
   console.log("🚀 Iniciando la obtención de recomendación de riego...");
-  console.log("endpoint:", endpoint);
-  console.log("apiKey:", apiKey);
-  const prompt = `
-  Dados los siguientes datos históricos: 
-  
-  ${JSON.stringify(datosHistoricos)}.
+  const prompt = `Para un cultivo de ${cultivo}. A partir de los siguientes datos:
 
-  Y las siguientes condiciones climáticas, descritas de la siguiente manera:
-  - **latitude**: Latitud del lugar en grados decimales.
-  - **longitude**: Longitud del lugar en grados decimales.
-  - **timezone**: Zona horaria del lugar (por ejemplo, GMT).
-  - **elevation**: Elevación del lugar en metros sobre el nivel del mar.
-  - **hourly_units**: Unidades de medida para los datos climáticos horarios:
-    - **temperature_2m**: Temperatura a 2 metros del suelo (°C).
-    - **relative_humidity_2m**: Humedad relativa a 2 metros del suelo (%).
-    - **precipitation_probability**: Probabilidad de precipitación (%).
-    - **precipitation**: Cantidad de precipitación acumulada (mm).
-    - **rain**: Cantidad de lluvia acumulada (mm).
-    - **sunshine_duration**: Duración de la luz solar (segundos).
-    - **snowfall**: Cantidad de nieve acumulada (cm).
-    - **showers**: Cantidad de chubascos acumulados (mm).
-  - **hourly**: Datos climáticos horarios:
-    - **time**: Lista de tiempos en formato ISO8601.
-    - **temperature_2m**: Lista de temperaturas a 2 metros del suelo (°C) para cada hora.
-    - **relative_humidity_2m**: Lista de valores de humedad relativa a 2 metros del suelo (%) para cada hora.
-    - **precipitation_probability**: Lista de probabilidades de precipitación (%) para cada hora.
-    - **precipitation**: Lista de cantidades de precipitación acumulada (mm) para cada hora.
-    - **rain**: Lista de cantidades de lluvia acumulada (mm) para cada hora.
-    - **sunshine_duration**: Lista de duraciones de luz solar (segundos) para cada hora.
-    - **snowfall**: Lista de cantidades de nieve acumulada (cm) para cada hora.
-    - **showers**: Lista de cantidades de chubascos acumulados (mm) para cada hora.
+- Datos históricos diarios y semanales (mediaDiaria, mediaSemanal)
+- Datos meteorológicos por hora (datosMeteoPorHora) desde Open-Meteo
+- Parámetro de calidad del agua (phAguaPrevio)
 
-  ${clima}
+Calcula una recomendación diaria de fertirrigación para los próximos 7 días (utiliza las fechas de los datos meteorológicos para calcular las recomendaciones. Teniendo en cuenta que la fecha de hoy es ${new Date().toISOString().split('T')[0]}), optimizando los siguientes aspectos:
 
-  ¿Cuál debería ser la cantidad de riego recomendada para un cultivo profesional de ${cultivo}, durante la próxima semana?
-  La respuesta debe tener el siguiente formato JSON (y solo dicha respuesta):
-  { "[dia actual + 1]":
-    {
-      "tiempoSalidaMezclaReguladorPH": "[numero en ms de tiempo de abertura]",
-      "tiempoSalidaMezclaNitrogeno":  "[numero en ms de tiempo de abertura]",
-      "tiempoSalidaMezclaFosforo":  "[numero en ms de tiempo de abertura]",
-      "tiempoSalidaMezclaPotasio": "[numero en ms de tiempo de abertura]",
-      "caudalSalidaRiego": "[numero en de cantidad de presión en el paso de salida de agua]",
-      "tiempoRiego": {
-        "horaInicio": "[Hora de inicio del riego (0-23)]",
-        "horaFin": "[Hora de fin del riego (0-23)]",
-        "dia": "[Día de la semana (0-6, donde 0 es domingo)]"
-      },
-      "cantidadReguladorPH": "[cantidad de regulador de pH en L/ha]",
-      "cantidadRiego": "[cantidad de agua en mm/día]",
-      "cantidadNutrientes": {
-        "nitrógeno": "[cantidad de nitrógeno en kg/ha]",
-        "fósforo": "[cantidad de fósforo en kg/ha]",
-        "potasio": "[cantidad de potasio en kg/ha]"
-    },
-    "[dia actual + 2]":
-    {
-      "tiempoSalidaMezclaReguladorPH": "[numero en ms de tiempo de abertura]",
-      "tiempoSalidaMezclaNitrogeno":  "[numero en ms de tiempo de abertura]",
-      "tiempoSalidaMezclaFosforo":  "[numero en ms de tiempo de abertura]",
-      "tiempoSalidaMezclaPotasio": "[numero en ms de tiempo de abertura]",
-      "caudalSalidaRiego": "[numero en de cantidad de presión en el paso de salida de agua]",
-      "tiempoRiego": {
-        "horaInicio": "[Hora de inicio del riego (0-23)]",
-        "horaFin": "[Hora de fin del riego (0-23)]",
-        "dia": "[Día de la semana (0-6, donde 0 es domingo)]"
-      },
-      "cantidadReguladorPH": "[cantidad de regulador de pH en L/ha]",
-      "cantidadRiego": "[cantidad de agua en mm/día]",
-      "cantidadNutrientes": {
-        "nitrógeno": "[cantidad de nitrógeno en kg/ha]",
-        "fósforo": "[cantidad de fósforo en kg/ha]",
-        "potasio": "[cantidad de potasio en kg/ha]"
-    },
-    "[dia actual + 3]":
-    {
-      [seguir el mismo formato para los siguientes días hasta el día actual + 7]
-    },
+- Selecciona horas con menor evaporación y baja radiación solar, evitando lluvia
+- Ajusta el riego si se prevé lluvia o la humedad histórica es alta
+- Corrige el pH si está fuera del rango ideal (5.5 – 6.5)
+- Calcula el tiempo de mezcla de nutrientes en milisegundos
+- Usa el volumen total del depósito (500L) para calcular dosis totales a inyectar
+- Usa los valores típicos indicados en el sistema si no se dan dosis exactas
+
+
+### Ph Agua Previo
+- El pH del agua de riego previo es de 7.4, lo que indica que es ligeramente alcalina.
+
+### Datos Históricos
+${datosHistoricos}
+
+### Datos Meteorológicos
+${clima}
+#### Analiza los datos meteorológicos y adapta las recomendaciones día a día según estos.
   `;
 
   try {
     const result = await client.chat.completions.create({
       model: deployment,
-      messages: [{ role: "user", content: prompt }],
-      // messages: [
-      //   { role: "system", content: SYSTEM_CONTEXT },
-      //   { role: "user", content: prompt }
-      // ],
-      max_tokens: 1200,
+      // messages: [{ role: "user", content: prompt }],
+      messages: [
+        { role: "system", content: SYSTEM_CONTEXT },
+        { role: "user", content: prompt }
+      ]
+      ,
+      max_tokens: 1500,
       temperature: 0.3,
       top_p: 1,
       frequency_penalty: 0,
       presence_penalty: 0
+      // ,max_completion_tokens: 100000
     });
 
     return result.choices[0].message.content;

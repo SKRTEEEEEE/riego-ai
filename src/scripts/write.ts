@@ -1,4 +1,4 @@
-import { connectModbusRTU } from "../app/connect";
+import { connectModbusRTU } from "../app/modbus";
 
 async function main() {
     console.log("🚀 Starting Modbus write script...");

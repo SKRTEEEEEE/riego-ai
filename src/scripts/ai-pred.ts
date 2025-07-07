@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import { calcularMediasHistoricas } from "../app/server-fake";
+import { calcularMediasHistoricas } from "../app/media-fake";
 import { obtenerRecomendacionRiego } from "../app/ai-pred";
 import { obtenerDatosClimaticos } from "../app/weather";
 dotenv.config()

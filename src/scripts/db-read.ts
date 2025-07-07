@@ -1,19 +1,13 @@
 import { obtenerDatosUltimoMes } from "../app/db";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import { calcularMediasHistoricas } from "../app/server-fake";
+import { calcularMediasHistoricas } from "../app/media-fake";
 dotenv.config()
-console.log("🌍 Conectando a MongoDB...")
-console.log("MONGODB_URI:", process.env.MONGODB_URI);
-mongoose.connect(process.env.MONGODB_URI!).then(() => {
-  console.log("✅ Conexión exitosa a MongoDB");
-}).catch((error) => {
-  console.error("❌ Error al conectar a MongoDB:", error);
-});
+
 
 async function main() {
     console.log("🚀 Starting Db Read script...");
-    
+    console.log("🌍 Conectando a MongoDB...");
     try {
         mongoose.connect(process.env.MONGODB_URI!).then(() => {
             console.log("✅ Conexión exitosa a MongoDB");
