@@ -6,7 +6,7 @@ import { conectarMongo, guardarLecturas } from "./src/app/db";
 
 dotenv.config();
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4321;
 
 // Lanzar tarea cada 2 horas
 setInterval(guardarLecturas, 2 * 60 * 60 * 1000);
