@@ -1,3 +1,5 @@
 node_modules
 .env
 dist
+plc/Schneider/usb
+plc/Schneider/proyecto_adan
