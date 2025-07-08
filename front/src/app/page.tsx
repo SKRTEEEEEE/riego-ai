@@ -1,4 +1,4 @@
-import IrrigationDashboard from "@/components/irrigation-dashboard";
+import IrrigationDashboard from "@/components/irrigation-dashboard/main";
 
 export default async function Home() {
   // const res = await fetch(
