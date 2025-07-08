@@ -2,8 +2,30 @@ import { MediaHistorica } from './media-fake';
 import { Cultivo } from './mc-fake';
 import { AzureOpenAI } from 'openai';
 import dotenv from 'dotenv';
-import { SYSTEM_CONTEXT } from './ai-const';
+import { getSystemContext } from './ai-const';
 
+export type EspecificacionesSystemPrompt = {
+  volumenMaxDepositoMezcla: number; // Volumen total del depósito de mezcla en litros
+  caudalesNutrientes: {
+    reguladorPH: number; // Caudal de inyección del regulador de pH en L/h
+    nitrogeno: number; // Caudal de inyección de nitrógeno en L/h
+    fosforo: number; // Caudal de inyección de fósforo en L/h
+    potasio: number; // Caudal de inyección de potasio en L/h
+  },
+  concentracionNutrientes: {
+    nitrogeno: number; // Concentración de nitrógeno en g/L
+    fosforo: number; // Concentración de fósforo en g/L
+    potasio: number; // Concentración de potasio en g/L
+  }
+}
+
+export type EspecificacionesUserPrompt = {
+  rangoPhIdeal?: [number, number]; // Rango ideal de pH para el agua de riego
+  phAguaPrevio: number; // pH del agua de riego previo
+
+  cultivo: Cultivo; // Tipo de cultivo para el que se generan las recomendaciones
+
+}
 dotenv.config();
 
  const endpoint = process.env["AZURE_OPENAI_ENDPOINT"] || "https://airiego.openai.azure.com/";
@@ -17,26 +39,25 @@ const apiKey = process.env["AZURE_OPENAI_API_KEY"] || "<REPLACE_WITH_YOUR_KEY_VA
 
 const client = new AzureOpenAI({ endpoint, apiKey, apiVersion, deployment });
 
-export const obtenerRecomendacionRiego = async (cultivo: Cultivo, datosHistoricos: MediaHistorica, clima: string) => {
+export const obtenerRecomendacionRiego = async ( datosHistoricos: MediaHistorica, clima: string, esp:EspecificacionesUserPrompt,userPrompt?: string) => {
   console.log("🚀 Iniciando la obtención de recomendación de riego...");
-  const prompt = `Para un cultivo de ${cultivo}. A partir de los siguientes datos:
+  const prompt = `Para un cultivo de ${esp.cultivo}. A partir de los siguientes datos:
 
 - Datos históricos diarios y semanales (mediaDiaria, mediaSemanal)
 - Datos meteorológicos por hora (datosMeteoPorHora) desde Open-Meteo
 - Parámetro de calidad del agua (phAguaPrevio)
 
-Calcula una recomendación diaria de fertirrigación para los próximos 7 días (utiliza las fechas de los datos meteorológicos para calcular las recomendaciones. Teniendo en cuenta que la fecha de hoy es ${new Date().toISOString().split('T')[0]}), optimizando los siguientes aspectos:
+Calcula una recomendación diaria de fertirrigación para los próximos 7 días (utiliza las fechas de los datos meteorológicos para calcular las recomendaciones. Teniendo en cuenta que la fecha de hoy es ${new Date().toISOString().split('T')[0]}), y los siguientes aspectos:
 
+${userPrompt ?? `- **` + userPrompt + `**`}
 - Selecciona horas con menor evaporación y baja radiación solar, evitando lluvia
-- Ajusta el riego si se prevé lluvia o la humedad histórica es alta
-- Corrige el pH si está fuera del rango ideal (5.5 – 6.5)
-- Calcula el tiempo de mezcla de nutrientes en milisegundos
-- Usa el volumen total del depósito (500L) para calcular dosis totales a inyectar
-- Usa los valores típicos indicados en el sistema si no se dan dosis exactas
+- Ajusta el riego si se prevé lluvia o la humedad histórica es alta, modificando la cantidad de riego (mm/dia) y calculando el tiempo de riego ideal y el caudal de salida necesario.
+- Calcula el tiempo de inyección de nutrientes en milisegundos necesarios para un cultivo de ${esp.cultivo}, adaptando-lo según la meteorología y las condiciones del suelo para obtener una cantidad de nutrientes ideal.
+- Corrige el pH si está fuera del rango ideal (${esp.rangoPhIdeal ? esp.rangoPhIdeal[0] + " - " + esp.rangoPhIdeal[1] : "5.5 - 7.0"})
 
 
 ### Ph Agua Previo
-- El pH del agua de riego previo es de 7.4, lo que indica que es ligeramente alcalina.
+- El pH del agua de riego previo es de ${esp.phAguaPrevio}, lo que indica que es ligeramente alcalina.
 
 ### Datos Históricos
 ${datosHistoricos}
@@ -51,7 +72,19 @@ ${clima}
       model: deployment,
       // messages: [{ role: "user", content: prompt }],
       messages: [
-        { role: "system", content: SYSTEM_CONTEXT },
+        { role: "system", content: getSystemContext({volumenMaxDepositoMezcla: 100000,caudalesNutrientes: {
+          reguladorPH: 10, // L/h
+          nitrogeno: 10, // L/h
+          fosforo: 1, // L/h
+          potasio: 1 // L/h
+        },
+        concentracionNutrientes: {
+          nitrogeno: 0.5, // Kg/L
+          fosforo: 0.5, // Kg/L
+          potasio: 0.5 // Kg/L
+        }
+      }
+      ) },
         { role: "user", content: prompt }
       ]
       ,

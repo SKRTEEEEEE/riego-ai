@@ -24,7 +24,7 @@ async function main() {
         console.log("📈 Medias históricas calculadas:", datosHistoricos);
         const datosClimaticos = await obtenerDatosClimaticos();
         console.log("🌤️ Datos climáticos obtenidos:", datosClimaticos);
-        const iaRes = await obtenerRecomendacionRiego("tomates",datosHistoricos,datosClimaticos )
+        const iaRes = await obtenerRecomendacionRiego(datosHistoricos,datosClimaticos, {rangoPhIdeal: [5.5,6], phAguaPrevio: 7.1, cultivo: "tomates"} )
         console.log("🤖 Recomendación de riego obtenida:", iaRes);
         console.log("✅ Script completed successfully");
         process.exit(1);

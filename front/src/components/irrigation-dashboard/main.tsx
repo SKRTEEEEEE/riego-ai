@@ -5,6 +5,7 @@ import type React from "react"
 
 
 import WeatherChart from "./weather-chart"
+import TalkAICard from "./talkai-card"
 import PredictionCards from "./prediction-cards"
 
 // Datos meteorológicos completos
@@ -57,10 +58,13 @@ export default function IrrigationDashboard({ fullWeatherData }: { fullWeatherDa
 
                 {/* Gráfico Meteorológico Completo - Mitad Superior */}
                 <WeatherChart chartData={chartData} />
+                {/* Predicciones de IA - Mitad Inferior */}
 
+                <PredictionCards/>
+                {/* Talk IA - Footer */}
+                <TalkAICard />
             </div>
-            {/* Predicciones de IA - Mitad Inferior */}
-            <PredictionCards />
+
         </div>
     )
 }
