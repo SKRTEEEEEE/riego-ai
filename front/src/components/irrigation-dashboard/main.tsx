@@ -5,7 +5,7 @@ import type React from "react"
 
 
 import WeatherChart from "./weather-chart"
-import TalkAICard from "./talkai-card"
+// import TalkAICard from "./talkai-card"
 import PredictionCards from "./prediction-cards"
 
 // Datos meteorológicos completos
@@ -37,10 +37,13 @@ const parseWeatherData = (fullWeatherData) => {
 
 
 
-export default function IrrigationDashboard({ fullWeatherData }: { fullWeatherData: Record<string, any> }) {
-    console.log("Full Weather Data:", fullWeatherData)
+export default function IrrigationDashboard({ fullWeatherData, plcStatus, aiData }: 
+    { 
+    fullWeatherData: Record<string, any>, 
+    plcStatus: Record<string, any>, 
+    aiData: Record<string, any>,
+}) {
     const chartData = parseWeatherData(fullWeatherData)
-    console.log("Chart Data:", chartData.slice(0, 5)) // Muestra los primeros 5 datos para depuración
 
 
     return (
@@ -59,10 +62,9 @@ export default function IrrigationDashboard({ fullWeatherData }: { fullWeatherDa
                 {/* Gráfico Meteorológico Completo - Mitad Superior */}
                 <WeatherChart chartData={chartData} />
                 {/* Predicciones de IA - Mitad Inferior */}
-
-                <PredictionCards/>
-                {/* Talk IA - Footer */}
-                <TalkAICard />
+                <PredictionCards plcStatus={plcStatus} aiData={aiData}/>
+                {/* Talk AI - Footer */}
+                {/* <TalkAICard /> */}
             </div>
 
         </div>

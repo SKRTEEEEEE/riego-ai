@@ -64,3 +64,139 @@ Siempre respondes en formato JSON con la siguiente estructura para los 7 días s
 
 SOLO proporciona el JSON, sin explicaciones adicionales.
 `;
+
+export const mockResponse = {
+  "2025-07-10": {
+    "tiempoSalidaMezclaReguladorPH": "720000",
+    "tiempoSalidaMezclaNitrogeno": "1800000",
+    "tiempoSalidaMezclaFosforo": "180000",
+    "tiempoSalidaMezclaPotasio": "180000",
+    "caudalSalidaRiego": "2.5 bar",
+    "tiempoRiego": {
+      "horaInicio": "6",
+      "horaFin": "8",
+      "dia": "3"
+    },
+    "cantidadReguladorPH": "2.0",
+    "cantidadRiego": "6.0",
+    "cantidadNutrientes": {
+      "nitrógeno": "9.0",
+      "fósforo": "0.9",
+      "potasio": "0.9"
+    }
+  },
+  "2025-07-11": {
+    "tiempoSalidaMezclaReguladorPH": "720000",
+    "tiempoSalidaMezclaNitrogeno": "1620000",
+    "tiempoSalidaMezclaFosforo": "162000",
+    "tiempoSalidaMezclaPotasio": "162000",
+    "caudalSalidaRiego": "2.3 bar",
+    "tiempoRiego": {
+      "horaInicio": "7",
+      "horaFin": "9",
+      "dia": "4"
+    },
+    "cantidadReguladorPH": "2.0",
+    "cantidadRiego": "5.4",
+    "cantidadNutrientes": {
+      "nitrógeno": "8.1",
+      "fósforo": "0.81",
+      "potasio": "0.81"
+    }
+  },
+  "2025-07-12": {
+    "tiempoSalidaMezclaReguladorPH": "720000",
+    "tiempoSalidaMezclaNitrogeno": "1440000",
+    "tiempoSalidaMezclaFosforo": "144000",
+    "tiempoSalidaMezclaPotasio": "144000",
+    "caudalSalidaRiego": "2.1 bar",
+    "tiempoRiego": {
+      "horaInicio": "6",
+      "horaFin": "8",
+      "dia": "5"
+    },
+    "cantidadReguladorPH": "2.0",
+    "cantidadRiego": "4.8",
+    "cantidadNutrientes": {
+      "nitrógeno": "7.2",
+      "fósforo": "0.72",
+      "potasio": "0.72"
+    }
+  },
+  "2025-07-13": {
+    "tiempoSalidaMezclaReguladorPH": "720000",
+    "tiempoSalidaMezclaNitrogeno": "1260000",
+    "tiempoSalidaMezclaFosforo": "126000",
+    "tiempoSalidaMezclaPotasio": "126000",
+    "caudalSalidaRiego": "1.9 bar",
+    "tiempoRiego": {
+      "horaInicio": "7",
+      "horaFin": "9",
+      "dia": "6"
+    },
+    "cantidadReguladorPH": "2.0",
+    "cantidadRiego": "4.2",
+    "cantidadNutrientes": {
+      "nitrógeno": "6.3",
+      "fósforo": "0.63",
+      "potasio": "0.63"
+    }
+  },
+  "2025-07-14": {
+    "tiempoSalidaMezclaReguladorPH": "720000",
+    "tiempoSalidaMezclaNitrogeno": "1620000",
+    "tiempoSalidaMezclaFosforo": "162000",
+    "tiempoSalidaMezclaPotasio": "162000",
+    "caudalSalidaRiego": "2.3 bar",
+    "tiempoRiego": {
+      "horaInicio": "6",
+      "horaFin": "8",
+      "dia": "0"
+    },
+    "cantidadReguladorPH": "2.0",
+    "cantidadRiego": "5.4",
+    "cantidadNutrientes": {
+      "nitrógeno": "8.1",
+      "fósforo": "0.81",
+      "potasio": "0.81"
+    }
+  },
+  "2025-07-15": {
+    "tiempoSalidaMezclaReguladorPH": "720000",
+    "tiempoSalidaMezclaNitrogeno": "1800000",
+    "tiempoSalidaMezclaFosforo": "180000",
+    "tiempoSalidaMezclaPotasio": "180000",
+    "caudalSalidaRiego": "2.5 bar",
+    "tiempoRiego": {
+      "horaInicio": "7",
+      "horaFin": "9",
+      "dia": "1"
+    },
+    "cantidadReguladorPH": "2.0",
+    "cantidadRiego": "6.0",
+    "cantidadNutrientes": {
+      "nitrógeno": "9.0",
+      "fósforo": "0.9",
+      "potasio": "0.9"
+    }
+  },
+  "2025-07-16": {
+    "tiempoSalidaMezclaReguladorPH": "720000",
+    "tiempoSalidaMezclaNitrogeno": "1620000",
+    "tiempoSalidaMezclaFosforo": "162000",
+    "tiempoSalidaMezclaPotasio": "162000",
+    "caudalSalidaRiego": "2.3 bar",
+    "tiempoRiego": {
+      "horaInicio": "6",
+      "horaFin": "8",
+      "dia": "2"
+    },
+    "cantidadReguladorPH": "2.0",
+    "cantidadRiego": "5.4",
+    "cantidadNutrientes": {
+      "nitrógeno": "8.1",
+      "fósforo": "0.81",
+      "potasio": "0.81"
+    }
+  }
+}

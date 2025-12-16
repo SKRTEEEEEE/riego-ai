@@ -2,9 +2,10 @@ import mongoose from "mongoose";
 import { DatoSensor } from "../models/datos-sensor";
 import { Cultivo, generarDatoMC } from "./mc-fake";
 import dotenv from "dotenv";
+import { RiegoCultivo } from "../models/riego-cultivo";
 
-const MONGODB_URI = process.env.MONGODB_URI || "";
 dotenv.config();
+const MONGODB_URI = process.env.MONGODB_URI || "";
 
 /**
  * Conecta a la base de datos MongoDB utilizando Mongoose.
@@ -64,4 +65,17 @@ export async function guardarLecturas() {
     await DatoSensor.create(dato);
     console.log(`📥 Insertado dato para ${cultivo}:`, dato);
   }
+}
+
+
+
+export async function guardarCultivo(data: Array<Record<string, any>>){
+    try {
+      const res = await RiegoCultivo.insertMany(data)
+      console.log("respuesta guardar cultivo: ", res)
+      return res
+    } catch (error) {
+      console.error(`Error at save riego del cultivo`, error)
+      throw new Error("No se pudieron guardar los datos de riego del cultivo");
+    }
 }

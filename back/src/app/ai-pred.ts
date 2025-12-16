@@ -49,21 +49,22 @@ export const obtenerRecomendacionRiego = async ( datosHistoricos: MediaHistorica
 
 Calcula una recomendación diaria de fertirrigación para los próximos 7 días (utiliza las fechas de los datos meteorológicos para calcular las recomendaciones. Teniendo en cuenta que la fecha de hoy es ${new Date().toISOString().split('T')[0]}), y los siguientes aspectos:
 
-${userPrompt ?? `- **` + userPrompt + `**`}
+${userPrompt ? `- **` + userPrompt + `**` : ''}
 - Selecciona horas con menor evaporación y baja radiación solar, evitando lluvia
 - Ajusta el riego si se prevé lluvia o la humedad histórica es alta, modificando la cantidad de riego (mm/dia) y calculando el tiempo de riego ideal y el caudal de salida necesario.
-- Calcula el tiempo de inyección de nutrientes en milisegundos necesarios para un cultivo de ${esp.cultivo}, adaptando-lo según la meteorología y las condiciones del suelo para obtener una cantidad de nutrientes ideal.
+- Calcula el tiempo de inyección de nutrientes en milisegundos necesarios para un cultivo de ${esp.cultivo}, adaptando-lo según la meteorología y las condiciones del suelo para obtener una cantidad de nutrientes ideal. Teniendo en cuenta el caudal de inyección de cada nutriente y la concentración de nutrientes en el liquido a inyectar en el tanque de mezcla.
 - Corrige el pH si está fuera del rango ideal (${esp.rangoPhIdeal ? esp.rangoPhIdeal[0] + " - " + esp.rangoPhIdeal[1] : "5.5 - 7.0"})
 
 
 ### Ph Agua Previo
-- El pH del agua de riego previo es de ${esp.phAguaPrevio}, lo que indica que es ligeramente alcalina.
+- El pH del agua de riego previo es de ${esp.phAguaPrevio}.
 
 ### Datos Históricos
 ${datosHistoricos}
 
 ### Datos Meteorológicos
 ${clima}
+
 #### Analiza los datos meteorológicos y adapta las recomendaciones día a día según estos.
   `;
 
